@@ -1,7 +1,10 @@
-.PHONY: install collectstatic migrate setup build render-start dev
+.PHONY: install tailwind-build collectstatic migrate setup build render-start dev
 
 install:
 	uv sync
+
+tailwind-build:
+	uv run python manage.py tailwind build
 
 collectstatic:
 	uv run python manage.py collectstatic --noinput
@@ -9,7 +12,8 @@ collectstatic:
 migrate:
 	uv run python manage.py migrate
 
-setup: install collectstatic migrate
+# ВАЖНО: tailwind-build должен идти СТРОГО ПЕРЕД collectstatic
+setup: install tailwind-build collectstatic migrate
 
 build:
 	./build.sh
@@ -17,5 +21,6 @@ build:
 render-start:
 	gunicorn task_manager.wsgi:application
 
+# Для локальной разработки лучше использовать эту команду, она следит за изменениями
 dev:
-	uv run python manage.py runserver
+	uv run python manage.py tailwind runserver

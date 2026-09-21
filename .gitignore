@@ -48,6 +48,7 @@ Thumbs.db
 
 # Static files
 staticfiles/
+assets/*.css
 
 # uv
 .uv/
