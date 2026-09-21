@@ -154,3 +154,12 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Исправление редиректа после успешного входа
+LOGIN_REDIRECT_URL = '/'
+
+# Редирект после выхода (на всякий случай)
+LOGOUT_REDIRECT_URL = '/'
+
+# Страница для неавторизованных пользователей (опционально)
+LOGIN_URL = '/login/'
