@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # my apps
 
     'task_manager_app.apps.TaskManagerAppConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
