@@ -18,7 +18,9 @@
         <a href="{% url 'index' %}" class="text-xl font-bold">Менеджер задач</a>
 
         <div class="flex space-x-4">
+
             <a href="{% url 'users:index' %}" class="hover:underline">Пользователи</a>
+            <a href="{% url 'statuses:index' %}" class="hover:underline">Статусы</a>
 
             {% if user.is_authenticated %}
                 <span class="text-gray-200">{{ user.username }}</span>
