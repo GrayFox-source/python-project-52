@@ -55,10 +55,16 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user.pk == self.get_object().pk
 
     def handle_no_permission(self):
-        messages.error(self.request, 'У вас нет прав для изменения') # Текст по заданию
+        messages.error(self.request, 'У вас нет прав для изменения')
         return redirect('users:index')
 
     def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        # связан ли пользователь с задачами
+        if user.author_tasks.exists() or user.executor_tasks.exists():
+            messages.error(self.request, 'Невозможно удалить пользователя')
+            return redirect('users:index')
+
         messages.success(self.request, 'Пользователь успешно удален')
         return super().delete(request, *args, **kwargs)
 
