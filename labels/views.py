@@ -47,12 +47,15 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('labels:index')
     login_url = '/login/'
 
-    def delete(self, request, *args, **kwargs):
-        label = self.get_object()
+    def post(self, request, *args, **kwargs):
+        # Метка
+        self.object = self.get_object()
 
-        if label.tasks.exists():
+        # связана ли метка с задачами
+        if self.object.tasks.exists():
             messages.error(self.request, 'Невозможно удалить метку')
             return redirect('labels:index')
 
+        # Если не связана — удаляем
         messages.success(self.request, 'Метка успешно удалена')
-        return super().delete(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)

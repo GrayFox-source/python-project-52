@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
@@ -58,15 +59,16 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.error(self.request, 'У вас нет прав для изменения')
         return redirect('users:index')
 
-    def delete(self, request, *args, **kwargs):
-        user = self.get_object()
-        # связан ли пользователь с задачами
-        if user.author_tasks.exists() or user.executor_tasks.exists():
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        try:
+            response = super().post(request, *args, **kwargs)
+            messages.success(self.request, 'Пользователь успешно удален')
+            return response
+        except ProtectedError:
             messages.error(self.request, 'Невозможно удалить пользователя')
             return redirect('users:index')
-
-        messages.success(self.request, 'Пользователь успешно удален')
-        return super().delete(request, *args, **kwargs)
 
 
 class CustomLoginView(LoginView):

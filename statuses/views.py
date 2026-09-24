@@ -1,3 +1,4 @@
+from django.db.models import ProtectedError
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -49,12 +50,14 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('statuses:index')
     login_url = '/login/'
 
-    def delete(self, request, *args, **kwargs):
-        status = self.get_object()
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
 
-        # В будущем здесь будет проверка: if status.tasks.exists():
-        #     messages.error(request, 'Невозможно удалить статус')
-        #     return redirect('statuses:index')
-
-        messages.success(self.request, 'Статус успешно удален')
-        return super().delete(request, *args, **kwargs)
+        try:
+            response = super().post(request, *args, **kwargs)
+            messages.success(self.request, 'Статус успешно удален')
+            return response
+        except ProtectedError:
+            # Если статус связан с задачами — показываем ошибку
+            messages.error(self.request, 'Невозможно удалить статус')
+            return redirect('statuses:index')
