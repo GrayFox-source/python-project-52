@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from pathlib import Path
 import os
 import dj_database_url
@@ -21,6 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
+
+sentry_sdk.init(
+    dsn=os.getenv('SENTRY_DSN', ''),  # DSN из переменной окружения
+    integrations=[
+        DjangoIntegration(),
+    ],
+    # Если DEBUG=True, ошибки не отправляются (только локально)
+    # В продакшене DEBUG=False, и ошибки будут отправляться
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
+
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key-change-in-production')

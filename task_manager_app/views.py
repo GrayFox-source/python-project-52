@@ -4,3 +4,7 @@ from django.http import HttpResponse
 
 def index(request):
      return render(request, 'index.html')
+
+def test_error(request):  # <-- ДОБАВИТЬ
+    """Временная функция для тестирования Sentry"""
+    raise Exception("Тестовая ошибка для проверки Bugsink - можно удалить после проверки")
