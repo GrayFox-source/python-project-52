@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(label='Имя', max_length=150, required=True)
@@ -14,6 +14,10 @@ class CustomUserCreationForm(UserCreationForm):
             'password1': 'Пароль',
             'password2': 'Подтверждение пароля',
         }
+
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(label='Имя пользователя')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:

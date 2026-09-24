@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from .forms import CustomUserCreationForm, UserUpdateForm
+from .forms import CustomUserCreationForm, UserUpdateForm, CustomAuthenticationForm
 
 
 class UserListView(ListView):
@@ -26,11 +26,6 @@ class UserCreateView(CreateView):
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
         return super().form_valid(form)
 
-    # def form_invalid(self, form):
-    #     # ВРЕМЕННЫЙ ДЕБАГ: выведет ошибки в логи GitHub Actions
-    #     print(f"DEBUG FORM ERRORS: {form.errors}", file=sys.stderr)
-    #     print(f"DEBUG FORM DATA: {self.request.POST}", file=sys.stderr)
-    #     return super().form_invalid(form)
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
