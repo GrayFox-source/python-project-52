@@ -1,0 +1,21 @@
+exclude = [
+    ".venv",
+    ".git",
+    "__pycache__",
+    "migrations",
+    "task_manager/settings.py",
+    "manage.py",
+    "task_manager/wsgi.py",
+    "task_manager/asgi.py",
+    "theme",
+    "assets",
+]
+
+
+line-length = 120
+
+lint.ignore = [
+    "E501",    # Строка слишком длинная
+    "E203",    # Пробел перед двоеточием (конфликтует с форматированием списков)
+    "RUF012"   # Mutable default value for class attribute
+]
