@@ -1,4 +1,6 @@
 import sys
+
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
@@ -47,10 +49,12 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return response
 
 
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,
+                     DeleteView):
     model = User
     template_name = 'users/delete.html'
     success_url = reverse_lazy('users:index')
+    success_message = "Пользователь успешно удален"  # <-- ДОБАВИТЬ
 
     def test_func(self):
         return self.request.user.pk == self.get_object().pk
@@ -65,7 +69,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             messages.error(self.request, 'Невозможно удалить пользователя')
             return redirect('users:index')
 
-        messages.success(self.request, 'Пользователь успешно удален')
+        # SuccessMessageMixin сам добавит сообщение перед вызовом super().delete()
         return super().delete(request, *args, **kwargs)
 
 
