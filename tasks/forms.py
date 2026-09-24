@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from labels.models import Label
 from .models import Task
-
 
 class TaskForm(forms.ModelForm):
     class Meta:
