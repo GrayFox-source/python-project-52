@@ -1,11 +1,11 @@
+import sys
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, LogoutView
-from django.db.models import ProtectedError
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CustomUserCreationForm, UserUpdateForm
 
@@ -23,9 +23,14 @@ class UserCreateView(CreateView):
     success_url = '/login/'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # ВРЕМЕННЫЙ ДЕБАГ: выведет ошибки в логи GitHub Actions
+        print(f"DEBUG FORM ERRORS: {form.errors}", file=sys.stderr)
+        print(f"DEBUG FORM DATA: {self.request.POST}", file=sys.stderr)
+        return super().form_invalid(form)
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -59,16 +64,14 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.error(self.request, 'У вас нет прав для изменения')
         return redirect('users:index')
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        try:
-            response = super().post(request, *args, **kwargs)
-            messages.success(self.request, 'Пользователь успешно удален')
-            return response
-        except ProtectedError:
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user.author_tasks.exists() or user.executor_tasks.exists():
             messages.error(self.request, 'Невозможно удалить пользователя')
             return redirect('users:index')
+
+        messages.success(self.request, 'Пользователь успешно удален')
+        return super().delete(request, *args, **kwargs)
 
 
 class CustomLoginView(LoginView):
@@ -80,7 +83,7 @@ class CustomLoginView(LoginView):
 
 
 class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('index')
+    next_page = '/'
 
     def dispatch(self, request, *args, **kwargs):
         messages.success(self.request, 'Вы разлогинены')
