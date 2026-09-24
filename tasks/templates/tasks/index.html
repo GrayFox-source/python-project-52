@@ -87,7 +87,9 @@
         {% for task in tasks %}
             <tr class="hover:bg-gray-50">
                 <td class="py-2 px-4 border-b">{{ task.id }}</td>
-                <td class="py-2 px-4 border-b">{{ task.name }}</td>
+                <td class="py-2 px-4 border-b">
+                    <a href="{% url 'tasks:detail' task.id %}" class="text-blue-600 hover:underline">{{ task.name }}</a>
+                </td>
                 <td class="py-2 px-4 border-b">{{ task.status.name }}</td>
                 <td class="py-2 px-4 border-b">{{ task.author.username }}</td>
                 <td class="py-2 px-4 border-b">{{ task.executor.username|default:"—" }}</td>
