@@ -1,11 +1,11 @@
-from django.db.models import ProtectedError
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CustomUserCreationForm, UserUpdateForm
 
