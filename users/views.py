@@ -20,12 +20,12 @@ class UserCreateView(CreateView):
     model = User
     form_class = CustomUserCreationForm
     template_name = 'users/create.html'
-    success_url = reverse_lazy('login')
+    success_url = '/login/'
 
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
-        return response
+        return super().form_valid(form)
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
