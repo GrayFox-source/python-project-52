@@ -3,16 +3,24 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import redirect
+from django_filters.views import FilterView
 
+from .filters import TaskFilter
 from .models import Task
 from .forms import TaskForm
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, FilterView):  # <-- FilterView вместо ListView
     model = Task
     template_name = 'tasks/index.html'
     context_object_name = 'tasks'
     login_url = '/login/'
+    filterset_class = TaskFilter
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['request'] = self.request
+        return kwargs
 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
