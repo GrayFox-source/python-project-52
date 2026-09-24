@@ -7,7 +7,7 @@ from .models import Task
 class TaskForm(forms.ModelForm):
     executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
-        label='Исполнитель',  # <-- уже есть
+        label='Исполнитель',
         required=False,
         widget=forms.Select(attrs={
             'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
@@ -47,3 +47,8 @@ class TaskForm(forms.ModelForm):
                 'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: показываем fullName вместо username
+        self.fields['executor'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}".strip() or obj.username
