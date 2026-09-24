@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -47,5 +48,11 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/login/'
 
     def delete(self, request, *args, **kwargs):
+        label = self.get_object()
+
+        if label.tasks.exists():
+            messages.error(self.request, 'Невозможно удалить метку')
+            return redirect('labels:index')
+
         messages.success(self.request, 'Метка успешно удалена')
         return super().delete(request, *args, **kwargs)
