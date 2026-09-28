@@ -1,6 +1,7 @@
 # Менеджер задач (Python)
 
 [![hexlet-check](https://github.com/GrayFox-source/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/GrayFox-source/python-project-52/actions)
+[![CI](https://github.com/GrayFox-source/python-project-52/actions/workflows/ci.yml/badge.svg)](https://github.com/GrayFox-source/python-project-52/actions/workflows/ci.yml)
 
 На практике узнаете о проектировании баз данных, PaaS, мониторинге ошибок, ORM, фреймворке Django, шаблонизации и Tailwind CSS.
 

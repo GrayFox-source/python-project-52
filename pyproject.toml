@@ -18,5 +18,22 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "coverage>=7.16.2",
     "ruff>=0.16.8",
 ]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "manage.py",
+    "*/settings.py",
+    "*/wsgi.py",
+    "*/asgi.py",
+    ".venv/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
